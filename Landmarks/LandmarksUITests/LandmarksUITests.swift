@@ -2,7 +2,7 @@
 //  LandmarksUITests.swift
 //  LandmarksUITests
 //
-//  Created by Chen Yue on 11/03/22.
+//  Created by Chen Yue on 19/03/22.
 //
 
 import XCTest
@@ -27,7 +27,6 @@ class LandmarksUITests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
 
-        // Use recording to get started writing UI tests.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
 
