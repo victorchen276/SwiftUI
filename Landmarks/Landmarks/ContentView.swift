@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-//test test again
 struct ContentView: View {
     var body: some View {
         Text("Hello, world!")
