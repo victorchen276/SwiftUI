@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		79E5C26627EC63E50012F0F7 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 79E5C26527EC63E50012F0F7 /* Swinject */; };
 		79FDE48727E56C31004298C1 /* LandmarksApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79FDE48627E56C31004298C1 /* LandmarksApp.swift */; };
 		79FDE48927E56C31004298C1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79FDE48827E56C31004298C1 /* ContentView.swift */; };
 		79FDE48B27E56C31004298C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79FDE48A27E56C31004298C1 /* Assets.xcassets */; };
@@ -55,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79E5C26627EC63E50012F0F7 /* Swinject in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,6 +151,9 @@
 			dependencies = (
 			);
 			name = Landmarks;
+			packageProductDependencies = (
+				79E5C26527EC63E50012F0F7 /* Swinject */,
+			);
 			productName = Landmarks;
 			productReference = 79FDE48327E56C31004298C1 /* Landmarks.app */;
 			productType = "com.apple.product-type.application";
@@ -221,6 +226,9 @@
 				Base,
 			);
 			mainGroup = 79FDE47A27E56C31004298C1;
+			packageReferences = (
+				79E5C26427EC63E50012F0F7 /* XCRemoteSwiftPackageReference "Swinject" */,
+			);
 			productRefGroup = 79FDE48427E56C31004298C1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -591,6 +599,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		79E5C26427EC63E50012F0F7 /* XCRemoteSwiftPackageReference "Swinject" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Swinject/Swinject.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.8.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		79E5C26527EC63E50012F0F7 /* Swinject */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 79E5C26427EC63E50012F0F7 /* XCRemoteSwiftPackageReference "Swinject" */;
+			productName = Swinject;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		79FDE49127E56C31004298C1 /* Landmarks.xcdatamodeld */ = {
