@@ -19,9 +19,25 @@ struct HomeView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 10) {
                             ForEach(taskModel.currentWeek, id: \.self) { day in
-                                Text(day.formatted(date: .abbreviated, time: .omitted))
+                                VStack (spacing: 10) {
+                                    Text(taskModel.extractDate(date: day, format: "dd"))
+                                        .font(.system(size: 14))
+                                        .fontWeight(.semibold)
+                                    Text(taskModel.extractDate(date: day, format: "EEE"))
+                                        .font(.system(size: 14))
+                                }
+                                .foregroundColor(.white)
+                                //MARK: Capsule shape
+                                .frame(width: 45, height: 90)
+                                .background(
+                                    ZStack {
+                                        Capsule()
+                                            .fill(.black)
+                                    }
+                                )
                             }
                         }
+                        .padding(.horizontal)
                     }
                 } header: {
                     HeaderView()
