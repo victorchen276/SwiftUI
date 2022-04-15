@@ -31,6 +31,7 @@ struct HomeView: View {
                                         .frame(width: 8, height: 8)
                                         .opacity(taskModel.isToday(date: day) ? 1 : 0)
                                 }
+                                .foregroundStyle(taskModel.isToday(date: day) ? .primary : .tertiary)
                                 .foregroundColor(taskModel.isToday(date: day) ? .white : .black)
                                 //MARK: Capsule shape
                                 .frame(width: 45, height: 90)
