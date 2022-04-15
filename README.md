@@ -1,5 +1,5 @@
 # SwiftUI
 
-1. ApiCall
-2. Kandmarks
-3. Taks
+1. ApiCall network request 
+2. Landmarks apple's offical demo
+3. Task

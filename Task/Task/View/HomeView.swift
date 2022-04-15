@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
     
     @StateObject var taskModel = TaskViewModel()
+    @Namespace var animation
     
     var body: some   View {
         ScrollView(.vertical, showsIndicators: false) {
@@ -25,14 +26,21 @@ struct HomeView: View {
                                         .fontWeight(.semibold)
                                     Text(taskModel.extractDate(date: day, format: "EEE"))
                                         .font(.system(size: 14))
+                                    Circle()
+                                        .fill(.white)
+                                        .frame(width: 8, height: 8)
+                                        .opacity(taskModel.isToday(date: day) ? 1 : 0)
                                 }
-                                .foregroundColor(.white)
+                                .foregroundColor(taskModel.isToday(date: day) ? .white : .black)
                                 //MARK: Capsule shape
                                 .frame(width: 45, height: 90)
                                 .background(
                                     ZStack {
-                                        Capsule()
-                                            .fill(.black)
+                                        if taskModel.isToday(date: day) {
+                                            Capsule()
+                                                .fill(.black)
+                                                .matchedGeometryEffect(id: "CURRENTDAY", in: animation)
+                                        }
                                     }
                                 )
                             }
