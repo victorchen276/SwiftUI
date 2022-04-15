@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class TaskViewModel: ObservableObject {
     
@@ -18,9 +19,23 @@ class TaskViewModel: ObservableObject {
     //Current Week Days
     @Published var currentWeek: [Date] = []
     @Published var currentDay: Date = Date()
+    @Published var filteredTasks: [Task]?
     
     init() {
         fetchCurrentWeek()
+        filterTodayTasks()
+    }
+    
+    func filterTodayTasks() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            let filtered = self.storedTasks.filter { Calendar.current.isDate($0.taskDate, inSameDayAs: self.currentDay) }
+            DispatchQueue.main.async {
+                withAnimation {
+//                    self.filteredTasks = filtered
+                    self.filteredTasks = self.storedTasks
+                }
+            }
+        }
     }
     
     func fetchCurrentWeek() {
@@ -43,6 +58,7 @@ class TaskViewModel: ObservableObject {
     
     func isToday(date: Date) -> Bool {
         let calendar = Calendar.current
-        return calendar.isDateInToday(date)
+        return calendar.isDate(currentDay, inSameDayAs: date)
+//        isDateInToday(date)
     }
 }
