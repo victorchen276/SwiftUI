@@ -12,9 +12,11 @@ class TaskViewModel: ObservableObject {
     
     //Sample Tasks
     @Published var storedTasks: [Task] = [
-        Task(taskTitle: "Meeting", taskDescription: "Discuss team task for the day", taskDate: .init(timeIntervalSince1970: 1641645497)),
-        Task(taskTitle: "Icon set", taskDescription: "Edit icons for team task for next week", taskDate: .init(timeIntervalSince1970: 1641649097))
+        Task(taskTitle: "Meeting", taskDescription: "Discuss team task for the day", taskDate: .init(timeIntervalSince1970: 1650033067)),
+        Task(taskTitle: "Icon set", taskDescription: "Edit icons for team task for next week", taskDate: .init(timeIntervalSince1970: 1650072667)),
+        Task(taskTitle: "WooHoo", taskDescription: "Hello world", taskDate: .init(timeIntervalSince1970: 1650119467))
     ]
+    //1650119467
     
     //Current Week Days
     @Published var currentWeek: [Date] = []
@@ -28,11 +30,13 @@ class TaskViewModel: ObservableObject {
     
     func filterTodayTasks() {
         DispatchQueue.global(qos: .userInitiated).async {
-            let filtered = self.storedTasks.filter { Calendar.current.isDate($0.taskDate, inSameDayAs: self.currentDay) }
+            let filtered = self.storedTasks
+                .filter { Calendar.current.isDate($0.taskDate, inSameDayAs: self.currentDay) }
+                .sorted { $1.taskDate < $0.taskDate }
             DispatchQueue.main.async {
                 withAnimation {
-//                    self.filteredTasks = filtered
-                    self.filteredTasks = self.storedTasks
+                    self.filteredTasks = filtered
+//                    self.filteredTasks = self.storedTasks
                 }
             }
         }
@@ -61,4 +65,12 @@ class TaskViewModel: ObservableObject {
         return calendar.isDate(currentDay, inSameDayAs: date)
 //        isDateInToday(date)
     }
+    
+    func isCurrentHour(date: Date) -> Bool {
+        let calendar = Calendar.current
+        let hour = calendar.component(.hour, from: date)
+        let currentHour = calendar.component(.hour, from: Date())
+        return hour == currentHour
+    }
+    
 }

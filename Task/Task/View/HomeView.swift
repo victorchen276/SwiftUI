@@ -88,7 +88,7 @@ struct HomeView: View {
     
     //MARK: Task View
     func TasksView() -> some View {
-        LazyVStack(spacing: 18) {
+        LazyVStack(spacing: 20) {
             if let tasks = taskModel.filteredTasks {
                 if tasks.isEmpty {
                     Text("No tasks found!!!")
@@ -107,9 +107,9 @@ struct HomeView: View {
         }
         .padding()
         .padding(.top)
-//        .onChange(of: taskModel.currentDay) { newValue in
-//            taskModel.filterTodayTasks()
-//        }
+        .onChange(of: taskModel.currentDay) { newValue in
+            taskModel.filterTodayTasks()
+        }
     }
     
     //MARK: Task Card View
@@ -117,13 +117,14 @@ struct HomeView: View {
         HStack(alignment: .top, spacing: 30) {
             VStack(spacing: 10) {
                 Circle()
-                    .fill(.black)
+                    .fill(taskModel.isCurrentHour(date: task.taskDate) ? .black : .clear)
                     .frame(width: 15, height: 15)
                     .background {
                         Circle()
                             .stroke(.black, lineWidth: 1)
                             .padding(-3)
                     }
+                    .scaleEffect(!taskModel.isCurrentHour(date: task.taskDate) ? 0.8 : 1)
                 Rectangle()
                     .fill(.black)
                     .frame(width: 3)
@@ -139,13 +140,45 @@ struct HomeView: View {
                     .hLeading()
                     Text(task.taskDate.formatted(date: .omitted, time: .shortened))
                 }
-                
+                //MARK: Team members
+                if taskModel.isCurrentHour(date: task.taskDate) {
+                    HStack(spacing: 0) {
+                        HStack(spacing: -10) {
+                            ForEach(["User1", "User2", "User3"], id: \.self) { user in
+                                Image(user)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 45, height: 45)
+                                    .clipShape(Circle())
+                                    .background(
+                                        Circle()
+                                            .stroke(.white, lineWidth: 5)
+                                    )
+                            }
+                        }
+                        .hLeading()
+                        //MARK: Check Button
+                        Button {
+                            
+                        } label: {
+                            Image(systemName: "checkmark")
+                                .foregroundColor(.black)
+                                .padding(10)
+                                .background(Color.white, in: RoundedRectangle(cornerRadius: 10))
+                        }
+                    }
+                    .padding()
+                }
             }
-            .foregroundColor(.white)
-            .padding()
+            .foregroundColor(taskModel.isCurrentHour(date: task.taskDate) ? .white : .black)
+            .padding(taskModel.isCurrentHour(date: task.taskDate) ? 15 : 0)
+            .padding(.bottom, taskModel.isCurrentHour(date: task.taskDate) ? 0 : 10)
             .hLeading()
             .background(
-                Color.black.cornerRadius(25)
+                Color
+                    .black
+                    .cornerRadius(25)
+                    .opacity(taskModel.isCurrentHour(date: task.taskDate) ? 1 : 0)
             )
         }
         .hLeading()
@@ -185,7 +218,6 @@ struct HomeView_Previews: PreviewProvider {
         HomeView()
     }
 }
-
 
 // Mark: UI DESGIN HELPER FUNCTION
 extension View {
