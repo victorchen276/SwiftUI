@@ -58,11 +58,13 @@ struct HomeView: View {
                             }
                             .padding(.horizontal)
                         }
-                        Rectangle()
-                            .fill(.gray)
-                            .opacity(0.8)
-                            .frame(height: 1)
+                        Divider()
                             .padding([.top, .leading, .trailing])
+//                        Rectangle()
+//                            .fill(.gray)
+//                            .opacity(0.8)
+//                            .frame(height: 1)
+//                            .padding([.top, .leading, .trailing])
                         TasksView()
                     } header: {
                         HeaderView()
