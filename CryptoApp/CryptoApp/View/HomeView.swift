@@ -11,28 +11,35 @@ struct HomeView: View {
     
     @State var currentCoin = "BTC"
     @Namespace var animation
+    @StateObject var appModel: AppViewModel = AppViewModel()
+    
     var body: some View {
         VStack {
-            HStack(spacing: 15) {
-                Circle()
-                    .fill(.red)
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 50, height: 50)
-                VStack(alignment: .leading, spacing: 5) {
-                    Text("Bitcoin")
-                        .font(.callout)
-                    Text("BTC")
-                        .font(.caption)
-                        .foregroundColor(.gray)
+            if let coins = appModel.coins, let coin = appModel.currentCoin {
+                HStack(spacing: 15) {
+                    Circle()
+                        .fill(.red)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 50, height: 50)
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("Bitcoin")
+                            .font(.callout)
+                        Text("BTC")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                    }
                 }
-            }
-            .frame(maxWidth: .infinity,
-//                   maxHeight: .infinity,
-                   alignment: .leading)
+                .frame(maxWidth: .infinity,
+    //                   maxHeight: .infinity,
+                       alignment: .leading)
 
-            CustomControl()
-            GraphView()
-            Controls()
+                CustomControl()
+                GraphView(coin: coin)
+                Controls()
+            } else {
+                ProgressView()
+                    .tint(Color.green)
+            }
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -40,17 +47,17 @@ struct HomeView: View {
     }
     
     @ViewBuilder
-    func GraphView() -> some View {
-//        GeometryReader { _ in
-//
-//        }
-        ScrollView(.horizontal, showsIndicators: true) {
-            ForEach(0..<30, id: \.self){ _ in
-                                            Text("Text Text").foregroundColor(Color.black)
-                                    }
+    func GraphView(coin: CryptoModel) -> some View {
+        GeometryReader { _ in
+            LineGraphView(data: coin.last_7days_price.price)
         }
-        .background(Color(UIColor.red))
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+//        ScrollView(.horizontal, showsIndicators: true) {
+//            ForEach(0..<30, id: \.self){ _ in
+//                                            Text("Text Text").foregroundColor(Color.black)
+//                                    }
+//        }
+//        .background(Color(UIColor.red))
+//        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.vertical, 30)
         .padding(.bottom, 20)
     }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LineGraphView: View {
     
-    var data: [CGFloat]
+    var data: [Double]
     @State var currentPolt = ""
     @State var offset: CGSize = .zero
     @State var showPlot: Bool = false
@@ -20,10 +20,11 @@ struct LineGraphView: View {
         GeometryReader { proxy in
             let height = proxy.size.height
             let width = proxy.size.width / CGFloat(data.count-1)
-            let maxPoint = (data.max() ?? 0) + 100
+            let maxPoint = data.max() ?? 0
+            let minPoint = data.min() ?? 0
             let points: [CGPoint] = data.enumerated().compactMap { item in
-                let progress = item.element / maxPoint
-                let pathHeight = progress * height
+                let progress = (item.element - minPoint) / (maxPoint - minPoint)
+                let pathHeight = progress * (height - 50)
                 let pathWidth = width * CGFloat(item.offset)
                 return CGPoint(x: pathWidth, y: -pathHeight + height)
             }
@@ -88,7 +89,7 @@ struct LineGraphView: View {
             .gesture(DragGesture().onChanged({ value in
                 withAnimation { showPlot = true }
                 //why need 40?!
-                let translation = value.location.x - 40
+                let translation = value.location.x
                 let index = max(min(Int((translation/width).rounded() + 1), data.count - 1), 0)
                 currentPolt = "$ \(data[index])"
                 self.translation = translation
