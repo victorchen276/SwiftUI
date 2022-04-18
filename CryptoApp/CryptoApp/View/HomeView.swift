@@ -66,6 +66,7 @@ struct HomeView: View {
                         .padding(.vertical, 6)
                         .padding(.horizontal, 10)
                         .contentShape(Rectangle())
+//                        .background(.gray.opacity(0.5), in: Capsule())
                         .background {
                             if currentCoin == coin {
                                 RoundedRectangle(cornerRadius: 5,
