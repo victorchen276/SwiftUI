@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct HomeView: View {
     
@@ -17,10 +18,12 @@ struct HomeView: View {
         VStack {
             if let coins = appModel.coins, let coin = appModel.currentCoin {
                 HStack(spacing: 15) {
-                    Circle()
-                        .fill(.red)
+                    AnimatedImage(url: URL(string: coin.image))
+                        .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 50, height: 50)
+//                        .overlay { Circle().stroke(.white, lineWidth: 1) }
+//                        .shadow(color: .white.opacity(0.5), radius: 7, x: 0, y: 0)
                     VStack(alignment: .leading, spacing: 5) {
                         Text("Bitcoin")
                             .font(.callout)
@@ -29,11 +32,25 @@ struct HomeView: View {
                             .foregroundColor(.gray)
                     }
                 }
-                .frame(maxWidth: .infinity,
-    //                   maxHeight: .infinity,
-                       alignment: .leading)
-
-                CustomControl()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                CustomControl(coins: coins)
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(coin.current_price.convertToCurrency())
+                        .font(.largeTitle.bold())
+                    Text("\(coin.price_change > 0 ? "+" : "")\(String(format: "%.2f", coin.price_change))")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundColor(coin.price_change < 0 ? .white : .black)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background {
+                            Capsule()
+                                .fill(coin.price_change < 0 ? .red : Color.green)
+                        }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
                 GraphView(coin: coin)
                 Controls()
             } else {
@@ -43,39 +60,30 @@ struct HomeView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        
     }
     
     @ViewBuilder
     func GraphView(coin: CryptoModel) -> some View {
         GeometryReader { _ in
-            LineGraphView(data: coin.last_7days_price.price)
+            LineGraphView(data: coin.last_7days_price.price, profit: coin.price_change > 0)
         }
-//        ScrollView(.horizontal, showsIndicators: true) {
-//            ForEach(0..<30, id: \.self){ _ in
-//                                            Text("Text Text").foregroundColor(Color.black)
-//                                    }
-//        }
-//        .background(Color(UIColor.red))
-//        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.vertical, 30)
         .padding(.bottom, 20)
     }
     
     @ViewBuilder
-    func CustomControl() -> some View {
-        let coins = ["BTC", "ETH", "BNB"]
+    func CustomControl(coins: [CryptoModel]) -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 15) {
-                ForEach(coins, id: \.self) { coin in
-                    Text(coin)
-                        .foregroundColor(currentCoin == coin ? .white : .gray)
+                ForEach(coins) { coin in
+                    Text(coin.symbol.uppercased())
+                        .foregroundColor(currentCoin == coin.symbol.uppercased() ? .white : .gray)
                         .padding(.vertical, 6)
                         .padding(.horizontal, 10)
                         .contentShape(Rectangle())
 //                        .background(.gray.opacity(0.5), in: Capsule())
                         .background {
-                            if currentCoin == coin {
+                            if currentCoin == coin.symbol.uppercased() {
                                 RoundedRectangle(cornerRadius: 5,
                                           style: .continuous)
                                     .fill(Color.gray.opacity(0.5))
@@ -83,7 +91,8 @@ struct HomeView: View {
                             }
                         }
                         .onTapGesture {
-                            withAnimation{ currentCoin = coin }
+                            appModel.currentCoin = coin
+                            withAnimation{ currentCoin = coin.symbol.uppercased() }
                         }
                 }
             }
@@ -134,4 +143,14 @@ struct HomeView_Previews: PreviewProvider {
         HomeView()
             .preferredColorScheme(.dark)
     }
+}
+
+extension Double {
+    
+    func convertToCurrency() -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        return formatter.string(from: .init(value: self)) ?? ""
+    }
+    
 }
